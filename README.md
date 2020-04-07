@@ -1,0 +1,1 @@
+# python-sc2-bot-template
