@@ -1,0 +1,11 @@
+portpicker
+async-timeout
+s2clientprotocol
+aiohttp
+pyglet
+numpy
+scipy
+mpyq
+cchardet
+aiodns
+matplotlib
