@@ -28,7 +28,7 @@ SC2 needs to be installed in the default location. Otherwise (and for Linux) you
 ##### Starcraft 2 Maps
 
 Download the Starcraft 2 Maps from [here](https://github.com/Blizzard/s2client-proto#downloads).  
-The maps must be present in the root of the maps folder for the purposes of this tutorial.
+The maps must be present in the **root** of the Starcraft 2 maps folder for the purposes of this tutorial.
 
 ## Creating your bot
 ### Setup
