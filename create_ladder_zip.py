@@ -2,11 +2,41 @@
 
 import os
 import shutil
-
+# Ignore the annoying resource warning from importing sc2 when an SC2 instance isn't running.
+import warnings
 import zipfile
 from typing import Optional
 
+from bot import CompetitiveBot as bot
+
+warnings.simplefilter("ignore", ResourceWarning)
+
 root_dir = os.path.dirname(os.path.abspath(__file__))
+
+ladderbots_json_template = """{
+    "Bots": {
+        "[NAME]": {
+            "Race": "[RACE]",
+            "Type": "Python",
+            "RootPath": "./",
+            "FileName": "run.py",
+            "Args": "-O",
+            "Debug": true,
+            "SurrenderPhrase": "(pineapple)"
+        }
+    }
+}"""
+
+files_and_directories_to_zip = [
+    "ladderbots.json",  # generated when this script is run
+    "python-sc2/sc2",
+    "bot",
+    "requirements.txt",
+    "run.py",
+]
+
+zip_archive_name = "bot.zip"
+copy_zip_to_folder = "publish"
 
 
 def zipdir(path: str, ziph: zipfile.ZipFile, remove_path: Optional[str] = None):
@@ -21,19 +51,12 @@ def zipdir(path: str, ziph: zipfile.ZipFile, remove_path: Optional[str] = None):
                     ziph.write(path_to_file)
 
 
+def generate_ladderbots_json():
+    return ladderbots_json_template.replace("[NAME]", bot.NAME).replace("[RACE]", str(bot.RACE).split(".")[1])
+
+
 def create_ladder_zip():
     print(f"Creating ladder zip...")
-
-    zip_archive_name = "bot.zip"
-    copy_zip_to_folder = "publish"
-
-    files_and_directories_to_zip = [
-        "python-sc2/sc2",
-        "bot",
-        "requirements.txt",
-        "ladderbots.json",
-        "run.py",
-    ]
 
     # Remove previous archive
     if os.path.isfile(os.path.join(copy_zip_to_folder, zip_archive_name)):
@@ -42,6 +65,10 @@ def create_ladder_zip():
 
     files_to_zip = []
     directories_to_zip = []
+
+    f = open("ladderbots.json", "w+")
+    f.write(generate_ladderbots_json())
+    f.close()
 
     for file in files_and_directories_to_zip:
         if not os.path.exists(file):
@@ -59,6 +86,8 @@ def create_ladder_zip():
     for directory in directories_to_zip:
         zipdir(directory, zipf)
     zipf.close()
+
+    os.remove("ladderbots.json")
 
     if not os.path.exists(copy_zip_to_folder):
         os.mkdir(copy_zip_to_folder)
