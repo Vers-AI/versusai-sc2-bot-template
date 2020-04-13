@@ -4,7 +4,7 @@ from sc2 import Race, Difficulty
 from sc2.player import Bot, Computer
 
 # Load bot
-from bot import CompetitiveBot
+from bot.bot import CompetitiveBot
 
 bot = Bot(Race.Terran, CompetitiveBot())
 
