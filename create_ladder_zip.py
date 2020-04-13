@@ -13,6 +13,22 @@ warnings.simplefilter("ignore", ResourceWarning)
 
 root_dir = os.path.dirname(os.path.abspath(__file__))
 
+# the name of the generated zip file
+zip_archive_name = "bot.zip"
+
+# the folder to put the zip file in
+copy_zip_to_folder = "publish"
+
+# the files to include in the zip file
+files_and_directories_to_zip = [
+    "ladderbots.json",  # generated when this script is run
+    "python-sc2/sc2",
+    "bot",
+    "requirements.txt",
+    "run.py",
+]
+
+# the template for the ladderbots.json file that will be generated
 ladderbots_json_template = """{
     "Bots": {
         "[NAME]": {
@@ -27,16 +43,9 @@ ladderbots_json_template = """{
     }
 }"""
 
-files_and_directories_to_zip = [
-    "ladderbots.json",  # generated when this script is run
-    "python-sc2/sc2",
-    "bot",
-    "requirements.txt",
-    "run.py",
-]
 
-zip_archive_name = "bot.zip"
-copy_zip_to_folder = "publish"
+def generate_ladderbots_json():
+    return ladderbots_json_template.replace("[NAME]", bot.NAME).replace("[RACE]", str(bot.RACE).split(".")[1])
 
 
 def zipdir(path: str, ziph: zipfile.ZipFile, remove_path: Optional[str] = None):
@@ -49,10 +58,6 @@ def zipdir(path: str, ziph: zipfile.ZipFile, remove_path: Optional[str] = None):
                     ziph.write(path_to_file, path_to_file.replace(remove_path, ""))
                 else:
                     ziph.write(path_to_file)
-
-
-def generate_ladderbots_json():
-    return ladderbots_json_template.replace("[NAME]", bot.NAME).replace("[RACE]", str(bot.RACE).split(".")[1])
 
 
 def create_ladder_zip():
