@@ -2,13 +2,13 @@
 
 import os
 import shutil
-# Ignore the annoying resource warning from importing sc2 when an SC2 instance isn't running.
-import warnings
 import zipfile
 from typing import Optional
 
 from bot import CompetitiveBot as bot
 
+# Ignore the annoying resource warning from importing sc2 when an SC2 instance isn't running.
+import warnings
 warnings.simplefilter("ignore", ResourceWarning)
 
 root_dir = os.path.dirname(os.path.abspath(__file__))
