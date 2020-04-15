@@ -1,7 +1,9 @@
 # python-sc2-bot-template
 
 Use this template to start a new python-sc2 bot - just click the green `Use this template` button above.  
-Then, if you need, follow the instructions below.  
+Then, if you need, follow the tutorial below.  
+
+# Tutorial: Starting a python-sc2 bot
 
 ## Preparing your environment
 
@@ -9,10 +11,10 @@ First you will need to prepare your environment.
 
 ### Prerequisites
 
-##### Python 3.7.X
+##### Python
 
-You will need to install and use Python 3.7.  
-If you use another version of python, you will likely run into errors while using the python-sc2 framework.  
+This tutorial recommends you use Python version 3.7.X because that's what most bot authoring tools use.
+However, Python 3.8 should also work with this tutorial.
 
 ##### Git
 
@@ -28,11 +30,11 @@ SC2 needs to be installed in the default location. Otherwise (and for Linux) you
 ##### Starcraft 2 Maps
 
 Download the Starcraft 2 Maps from [here](https://github.com/Blizzard/s2client-proto#downloads).  
-The maps must be present in the **root** of the Starcraft 2 maps folder for the purposes of this tutorial.
+The maps must be copied into the **root** of the Starcraft 2 maps folder - default location: `C:\Program Files (x86)\StarCraft II\Maps`.
 
 ## Creating your bot
 ### Setup
-Clone the repository:
+Clone your new repository using git:
 ```bash
 git clone --recursive <your_git_clone_repo_url_here>
 ```
@@ -40,7 +42,7 @@ cd into your bot directory:
 ```bash
 cd <bot_folder_name_here>
 ```
-Install our bot's requirements:
+Install our bot's Python requirements:
 ```bash
 pip install -r requirements.txt
 ```
@@ -48,16 +50,18 @@ Test our bot is working by running it:
 ```bash
 python ./run.py
 ```
-If all is well, you should see SC2 load and your bot start playing - although it will do nothing at the moment.
+If all is well, you should see SC2 load and your bot start mining minerals.  
+You can close the SC2 window to stop your bot running. 
 
 
 ### Bot name and race
 
-Go to the [bot/bot.py](bot/bot.py) and specify your bot's name and race.
+Now you will want to name your bot and select its race.
+You can specify both of these in the [bot/bot.py](bot/bot.py) file, in the `CompetitiveBot` class.
 
-### Adding to your bot
+### Updating your bot
 
-Put all your new code files in the `bot` folder. This folder is included when creating the ladder.zip for upload to the bot ladders.
+As you add features to your bot make sure all your new code files are in the `bot` folder. This folder is included when creating the ladder.zip for upload to the bot ladders.
 
 # Working with submodules
 
