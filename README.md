@@ -81,3 +81,7 @@ the required submodules with the following git command:
 ```bash
 git submodule update --init --recursive
 ```
+
+# Troubleshooting
+
+_to be filled in_
