@@ -1,5 +1,7 @@
 import sys
 
+from bot import CompetitiveBot
+
 sys.path.insert(1, "python-sc2")
 
 import argparse
@@ -16,15 +18,7 @@ from sc2.protocol import ConnectionAlreadyClosed
 # Run ladder game
 # This lets python-sc2 connect to a ladder game.
 # Based on: https://github.com/Dentosal/python-sc2/blob/master/examples/run_external.py
-def run_ladder_game(bot):
-    # Load command line arguments
-    parser = argparse.ArgumentParser()
-    parser.add_argument("--GamePort", type=int, nargs="?", help="Game port")
-    parser.add_argument("--StartPort", type=int, nargs="?", help="Start port")
-    parser.add_argument("--LadderServer", type=str, nargs="?", help="Ladder server")
-    parser.add_argument("--OpponentId", type=str, nargs="?", help="Opponent ID")
-    args, unknown = parser.parse_known_args()
-
+def run_ladder_game(args, bot):
     if args.LadderServer == None:
         host = "127.0.0.1"
     else:
@@ -32,9 +26,6 @@ def run_ladder_game(bot):
 
     host_port = args.GamePort
     lan_port = args.StartPort
-
-    # Add opponent_id to the bot class (accessed through self.opponent_id)
-    bot.ai.opponent_id = args.OpponentId
 
     # Port config
     ports = [lan_port + p for p in range(1, 6)]
@@ -74,12 +65,59 @@ async def join_ladder_game(
     return result
 
 
-def run():
-    # Load bot
-    from bot import CompetitiveBot
-    bot = Bot(CompetitiveBot.RACE, CompetitiveBot())
+def parse_arguments():
+    # Load command line arguments
+    parser = argparse.ArgumentParser()
 
-    if "--LadderServer" in sys.argv:
+    # Ladder play arguments
+    parser.add_argument("--GamePort", type=int, help="Game port.")
+    parser.add_argument("--StartPort", type=int, help="Start port.")
+    parser.add_argument("--LadderServer", type=str, help="Ladder server.")
+
+    # Local play arguments
+    parser.add_argument("--ComputerRace", type=str, default="Terran",
+                        help="Computer race. One of [Terran, Zerg, Protoss, Random]. Default is Terran. Only for local play.")
+    parser.add_argument("--ComputerDifficulty", type=str, default="VeryHard",
+                        help=f"Computer difficulty. One of [VeryEasy, Easy, Medium, MediumHard, Hard, Harder, VeryHard, CheatVision, CheatMoney, CheatInsane]. Default is VeryEasy. Only for local play.")
+    parser.add_argument("--Map", type=str, default="Simple64",
+                        help="The name of the map to use. Default is Simple64. Only for local play.")
+    parser.add_argument("--Realtime", action='store_true',
+                        help="Whether to use realtime mode. Default is false. Only for local play.")
+
+    # Both Ladder and Local play arguments
+    parser.add_argument("--OpponentId", type=str, help="A unique value identifying opponent.")
+
+    args, unknown_args = parser.parse_known_args()
+
+    for unknown_arg in unknown_args:
+        print(f"Unknown argument: {unknown_arg}")
+
+    # Set the OpponentId if it's not already set
+    if args.OpponentId is None:
+        if args.LadderServer:
+            args.OpponentId = "None"
+        else:
+            args.OpponentId = f"{args.ComputerRace}_{args.ComputerDifficulty}"
+
+    return args
+
+
+def load_bot(args):
+    # Load bot
+    competitive_bot = CompetitiveBot()
+    # Add opponent_id to the bot class (accessed through self.opponent_id)
+    competitive_bot.opponent_id = args.OpponentId
+
+    return Bot(CompetitiveBot.RACE, competitive_bot)
+
+
+def run():
+    args = parse_arguments()
+
+    bot = load_bot(args)
+
+    # The presence of a LadderServer argument indicates that this is a ladder game
+    if args.LadderServer:
         # Ladder game started by LadderManager
         print("Starting ladder game...")
         result, opponentid = run_ladder_game(bot)
@@ -87,7 +125,9 @@ def run():
     else:
         # Local game
         print("Starting local game...")
-        sc2.run_game(sc2.maps.get("TritonLE"), [bot, Computer(Race.Protoss, Difficulty.VeryHard)], realtime=False)
+        sc2.run_game(sc2.maps.get(args.Map),
+                     [bot, Computer(Race[args.ComputerRace], Difficulty[args.ComputerDifficulty])],
+                     realtime=args.Realtime)
 
 
 # Start game
