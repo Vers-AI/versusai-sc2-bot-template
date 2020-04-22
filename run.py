@@ -1,7 +1,6 @@
-
 import sys
-sys.path.insert(1, "python-sc2")
 
+sys.path.insert(1, "python-sc2")
 
 import argparse
 import asyncio
@@ -11,6 +10,7 @@ import sc2
 from sc2 import Race, Difficulty
 from sc2.client import Client
 from sc2.player import Bot, Computer
+from sc2.protocol import ConnectionAlreadyClosed
 
 
 # Run ladder game
