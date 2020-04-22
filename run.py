@@ -94,7 +94,7 @@ def run():
     else:
         # Local game
         print("Starting local game...")
-        sc2.run_game(sc2.maps.get("AbyssalReefLE"), [bot, Computer(Race.Protoss, Difficulty.VeryHard)], realtime=True)
+        sc2.run_game(sc2.maps.get("TritonLE"), [bot, Computer(Race.Protoss, Difficulty.VeryHard)], realtime=False)
 
 
 # Start game
