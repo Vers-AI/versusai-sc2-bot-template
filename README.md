@@ -63,6 +63,16 @@ You can specify both of these in the [bot/bot.py](bot/bot.py) file, in the `Comp
 
 As you add features to your bot make sure all your new code files are in the `bot` folder. This folder is included when creating the ladder.zip for upload to the bot ladders.
 
+### Competing with your bot
+
+To compete with your bot, you will first need zip up your bot, ready for distribution.   
+You can do this using the `create_ladder_zip.py` script like so:
+```
+python create_ladder_zip.py
+```
+This will create the zip file`publish\bot.zip`.
+You can then distribute this zip file to competitions.
+
 # Working with submodules
 
 If you cloned the repo without specifying `--recursive` you can initialize and checkout
