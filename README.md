@@ -42,6 +42,11 @@ cd into your bot directory:
 ```bash
 cd <bot_folder_name_here>
 ```
+Create and activate a virtual environment
+```bash
+python -m venv venv
+venv\Scripts\activate.bat
+```
 Install our bot's Python requirements:
 ```bash
 pip install -r requirements.txt
