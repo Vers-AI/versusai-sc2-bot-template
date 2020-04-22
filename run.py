@@ -119,7 +119,7 @@ def run():
     if args.LadderServer:
         # Ladder game started by LadderManager
         print("Starting ladder game...")
-        result, opponentid = run_ladder_game(bot)
+        result, opponentid = run_ladder_game(args, bot)
         print(result, " against opponent ", opponentid)
     else:
         # Local game
