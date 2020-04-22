@@ -36,7 +36,7 @@ def run_ladder_game(args, bot):
     portconfig.players = [[ports[3], ports[4]]]
 
     # Join ladder game
-    g = join_ladder_game(host=host, port=host_port, players=[bot], realtime=False, portconfig=portconfig)
+    g = join_ladder_game(host=host, port=host_port, players=[bot], realtime=args.Realtime, portconfig=portconfig)
 
     # Run it
     result = asyncio.get_event_loop().run_until_complete(g)
@@ -81,11 +81,10 @@ def parse_arguments():
                         help=f"Computer difficulty. One of [VeryEasy, Easy, Medium, MediumHard, Hard, Harder, VeryHard, CheatVision, CheatMoney, CheatInsane]. Default is VeryEasy. Only for local play.")
     parser.add_argument("--Map", type=str, default="Simple64",
                         help="The name of the map to use. Default is Simple64. Only for local play.")
-    parser.add_argument("--Realtime", action='store_true',
-                        help="Whether to use realtime mode. Default is false. Only for local play.")
 
     # Both Ladder and Local play arguments
     parser.add_argument("--OpponentId", type=str, help="A unique value identifying opponent.")
+    parser.add_argument("--Realtime", action='store_true', help="Whether to use realtime mode. Default is false.")
 
     args, unknown_args = parser.parse_known_args()
 
