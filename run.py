@@ -1,8 +1,11 @@
+
+import sys
+sys.path.insert(1, "python-sc2")
+
+
 import argparse
 import asyncio
 import logging
-import sys
-
 import aiohttp
 import sc2
 from sc2 import Race, Difficulty
