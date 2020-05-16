@@ -15,18 +15,19 @@ First you will need to prepare your environment.
 
 This tutorial recommends you use Python version 3.7.X because that's what most bot authoring tools use.
 However, Python 3.8 should also work with this tutorial.  
-You can find the Python download page [here](https://www.python.org/downloads/)
+[Python downloads page](https://www.python.org/downloads/)
 
 ##### Git
 
-This tutorial will use git for version control.
+This tutorial will use git for version control.  
+[Git downloads page](https://git-scm.com/downloads)
 
 ##### Starcraft 2
 
 On Windows SC2 is installed through the Battle.net app.  
 Linux users can download SC2 [here](https://github.com/Blizzard/s2client-proto#downloads).
 
-SC2 needs to be installed in the default location. Otherwise (and for Linux) you will need to create the SC2PATH env var to point to the SC2 install location.
+SC2 should be installed in the default location. Otherwise (and for Linux) you might need to create the SC2PATH environment variable to point to the SC2 install location.
 
 ##### Starcraft 2 Maps
 
