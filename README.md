@@ -14,7 +14,8 @@ First you will need to prepare your environment.
 ##### Python
 
 This tutorial recommends you use Python version 3.7.X because that's what most bot authoring tools use.
-However, Python 3.8 should also work with this tutorial.
+However, Python 3.8 should also work with this tutorial.  
+You can find the Python download page [here](https://www.python.org/downloads/)
 
 ##### Git
 
