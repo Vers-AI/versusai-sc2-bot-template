@@ -1,6 +1,6 @@
 # python-sc2-bot-template
 
-Use this template to start a new python-sc2 bot - just click the green `Use this template` button above.  
+Use this template to start a new python-sc2 bot.  
 Then, if you need, follow the tutorial below.  
 
 # Tutorial: Starting a python-sc2 bot
@@ -34,7 +34,8 @@ The maps must be copied into the **root** of the Starcraft 2 maps folder - defau
 
 ## Creating your bot
 ### Setup
-Clone your new repository using git:
+Click the green `Use this template` button above to create your own copy of this bot.  
+Now clone your new repository to your local computer using git:
 ```bash
 git clone --recursive <your_git_clone_repo_url_here>
 ```
