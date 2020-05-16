@@ -25,13 +25,13 @@ This tutorial will use git for version control.
 ##### Starcraft 2
 
 On Windows SC2 is installed through the Battle.net app.  
-Linux users can download SC2 [here](https://github.com/Blizzard/s2client-proto#downloads).
+Linux users can download SC2 [here](https://github.com/Blizzard/s2client-proto#linux-packages).
 
 SC2 should be installed in the default location. Otherwise (and for Linux) you might need to create the SC2PATH environment variable to point to the SC2 install location.
 
 ##### Starcraft 2 Maps
 
-Download the Starcraft 2 Maps from [here](https://github.com/Blizzard/s2client-proto#downloads).   For this tutorial you will at least need the 'Melee' pack.  
+Download the Starcraft 2 Maps from [here](https://github.com/Blizzard/s2client-proto#map-packs).   For this tutorial you will at least need the 'Melee' pack.  
 The maps must be copied into the **root** of the Starcraft 2 maps folder - default location: `C:\Program Files (x86)\StarCraft II\Maps`.
 
 ## Creating your bot
