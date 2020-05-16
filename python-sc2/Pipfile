@@ -1,0 +1,32 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+portpicker = "*"
+s2clientprotocol = "*"
+aiohttp = "*"
+pyglet = "*"
+numpy = "*"
+scipy = "*"
+mpyq = "*"
+
+[dev-packages]
+atomicwrites = "*"
+pytest = "*"
+mypy = "*"
+pillow = "*"
+pytest-asyncio = "*"
+hypothesis = "*"
+pytest-benchmark = "*"
+sphinx = "*"
+sphinx-autodoc-typehints = "*"
+pytest-cov = "*"
+coverage = "*"
+codecov = "*"
+matplotlib = "*"
+loguru = "*"
+
+[requires]
+python_version = "3.7"

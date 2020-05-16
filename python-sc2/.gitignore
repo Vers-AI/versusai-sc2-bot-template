@@ -1,0 +1,31 @@
+# Misc
+.DS_Store
+
+# Python + mypy + pytest
+__pycache__/
+*.pyc
+
+.mypy_cache/
+.pytest_cache/
+
+build/
+dist/
+*.egg-info/
+
+.cache/
+
+# SC2 things
+maps/
+mini_games/
+
+*.SC2Replay
+
+.hypothesis/
+
+# Editors
+.idea/
+.vscode/
+
+# Code coverage
+.coverage
+/htmlcov
