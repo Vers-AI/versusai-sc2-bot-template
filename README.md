@@ -39,7 +39,7 @@ The maps must be copied into the **root** of the Starcraft 2 maps folder - defau
 Click the green `Use this template` button above to create your own copy of this bot.  
 Now, using **Windows PowerShell** clone your new repository to your local computer using git:
 ```bash
-git clone --recursive <your_git_clone_repo_url_here>
+git clone <your_git_clone_repo_url_here>
 ```
 cd into your bot directory:
 ```bash
@@ -71,7 +71,7 @@ You can specify both of these in the [bot/bot.py](bot/bot.py) file, in the `Comp
 
 As you add features to your bot make sure all your new code files are in the `bot` folder. This folder is included when creating the ladder.zip for upload to the bot ladders.
 
-### Competing with your bot
+## Competing with your bot
 
 To compete with your bot, you will first need zip up your bot, ready for distribution.   
 You can do this using the `create_ladder_zip.py` script like so:
@@ -80,15 +80,6 @@ python create_ladder_zip.py
 ```
 This will create the zip file`publish\bot.zip`.
 You can then distribute this zip file to competitions.
-
-# Working with submodules
-
-If you cloned the repo without specifying `--recursive` you can initialize and checkout
-the required submodules with the following git command:
-
-```bash
-git submodule update --init --recursive
-```
 
 # Troubleshooting
 
