@@ -61,13 +61,14 @@ python ./run.py
 If all is well, you should see SC2 load and your bot start mining minerals.  
 You can close the SC2 window to stop your bot running. 
 
+## Updating your bot
 
 ### Bot name and race
 
 Now you will want to name your bot and select its race.
 You can specify both of these in the [bot/bot.py](bot/bot.py) file, in the `CompetitiveBot` class.
 
-### Updating your bot
+### Adding new code
 
 As you add features to your bot make sure all your new code files are in the `bot` folder. This folder is included when creating the ladder.zip for upload to the bot ladders.
 
