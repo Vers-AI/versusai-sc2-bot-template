@@ -1,8 +1,8 @@
 import sys
 
-from bot import CompetitiveBot
-
 sys.path.insert(1, "python-sc2")
+
+from bot import CompetitiveBot
 
 import argparse
 import asyncio
