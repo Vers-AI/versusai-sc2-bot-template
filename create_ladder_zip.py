@@ -1,5 +1,8 @@
 # Adapted from: https://github.com/DrInfy/sharpy-sc2/blob/master/dummy_ladder_zip.py
 
+import sys
+sys.path.insert(1, "python-sc2")
+
 import os
 import shutil
 import zipfile
