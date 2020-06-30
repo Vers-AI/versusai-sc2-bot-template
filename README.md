@@ -48,7 +48,9 @@ cd <bot_folder_name_here>
 Create and activate a virtual environment:
 ```bash
 python -m venv venv
-venv\Scripts\activate.ps1  # NOTE - specific to PowerShell
+# and then...
+venv\Scripts\activate # Windows
+source venv/bin/activate # Mac OS / Linux
 ```
 Install our bot's Python requirements:
 ```bash
