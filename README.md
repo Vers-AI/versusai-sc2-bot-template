@@ -25,7 +25,7 @@ This tutorial will use git for version control.
 ##### Starcraft 2
 
 On Windows SC2 is installed through the Battle.net app.  
-Linux users can download SC2 [here](https://github.com/Blizzard/s2client-proto#linux-packages).
+Linux users can either download the Blizzard SC2 Linux package [here](https://github.com/Blizzard/s2client-proto#linux-packages) or, alternatively, set up Battle.net via WINE using this [lutris script](https://lutris.net/games/battlenet/).
 
 SC2 should be installed in the default location. Otherwise (and for Linux) you might need to create the SC2PATH environment variable to point to the SC2 install location.
 
