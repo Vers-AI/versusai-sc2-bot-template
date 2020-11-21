@@ -75,6 +75,7 @@ def parse_arguments():
     parser.add_argument("--LadderServer", type=str, help="Ladder server.")
 
     # Local play arguments
+    parser.add_argument("--Sc2Version", type=str, help="The version of Starcraft 2 to load.")
     parser.add_argument("--ComputerRace", type=str, default="Terran",
                         help="Computer race. One of [Terran, Zerg, Protoss, Random]. Default is Terran. Only for local play.")
     parser.add_argument("--ComputerDifficulty", type=str, default="VeryHard",
@@ -126,7 +127,8 @@ def run():
         print("Starting local game...")
         sc2.run_game(sc2.maps.get(args.Map),
                      [bot, Computer(Race[args.ComputerRace], Difficulty[args.ComputerDifficulty])],
-                     realtime=args.Realtime)
+                     realtime=args.Realtime,
+                     sc2_version=args.Sc2Version,)
 
 
 # Start game
