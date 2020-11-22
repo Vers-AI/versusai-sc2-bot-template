@@ -49,7 +49,8 @@ Create and activate a virtual environment:
 ```bash
 python -m venv venv
 # and then...
-venv\Scripts\activate # Windows
+venv\Scripts\Activate.ps1 # Windows PowerShell
+venv\Scripts\activate.bat # Windows CMD Prompt
 source venv/bin/activate # Mac OS / Linux
 ```
 Install our bot's Python requirements:
