@@ -57,9 +57,9 @@ Install our bot's Python requirements:
 ```bash
 pip install -r requirements.txt
 ```
-Test our bot is working by running it on patch 4.10 (the AI Arena ladder version):
+Test our bot is working by running it:
 ```bash
-python ./run.py --Sc2Version 4.10
+python ./run.py
 ```
 If all is well, you should see SC2 load and your bot start mining minerals.  
 You can close the SC2 window to stop your bot running. 
