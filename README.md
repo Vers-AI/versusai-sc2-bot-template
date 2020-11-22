@@ -37,7 +37,7 @@ The maps must be copied into the **root** of the Starcraft 2 maps folder - defau
 ## Creating your bot
 ### Setup
 Click the green `Use this template` button above to create your own copy of this bot.  
-Now, using **Windows PowerShell** clone your new repository to your local computer using git:
+Now clone your new repository to your local computer using git:
 ```bash
 git clone <your_git_clone_repo_url_here>
 ```
