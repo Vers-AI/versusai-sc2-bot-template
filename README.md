@@ -84,7 +84,3 @@ python create_ladder_zip.py
 ```
 This will create the zip file`publish\bot.zip`.
 You can then distribute this zip file to competitions.
-
-# Troubleshooting
-
-_to be filled in_
