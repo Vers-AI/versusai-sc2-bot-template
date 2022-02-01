@@ -1,6 +1,3 @@
-import sys
-
-sys.path.insert(1, "python-sc2")
 
 from bot import CompetitiveBot
 
@@ -9,7 +6,8 @@ import asyncio
 import logging
 import aiohttp
 import sc2
-from sc2 import Race, Difficulty
+from sc2.main import run_game
+from sc2.data import Race, Difficulty
 from sc2.client import Client
 from sc2.player import Bot, Computer
 from sc2.protocol import ConnectionAlreadyClosed
@@ -125,10 +123,10 @@ def run():
     else:
         # Local game
         print("Starting local game...")
-        sc2.run_game(sc2.maps.get(args.Map),
+        run_game(sc2.maps.get(args.Map),
                      [bot, Computer(Race[args.ComputerRace], Difficulty[args.ComputerDifficulty])],
                      realtime=args.Realtime,
-                     sc2_version=args.Sc2Version,)
+                     sc2_version=args.Sc2Version, )
 
 
 # Start game

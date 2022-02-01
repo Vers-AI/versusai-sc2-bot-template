@@ -1,4 +1,4 @@
-from sc2 import BotAI, Race
+from sc2.bot_ai import BotAI, Race
 
 
 class CompetitiveBot(BotAI):
