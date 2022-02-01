@@ -1,8 +1,5 @@
 # Adapted from: https://github.com/DrInfy/sharpy-sc2/blob/master/dummy_ladder_zip.py
 
-import sys
-sys.path.insert(1, "python-sc2")
-
 import os
 import shutil
 import zipfile
@@ -25,7 +22,7 @@ copy_zip_to_folder = "publish"
 # the files to include in the zip file
 files_and_directories_to_zip = [
     "ladderbots.json",  # generated when this script is run
-    "python-sc2/sc2",
+    "sc2",
     "bot",
     "requirements.txt",
     "run.py",
