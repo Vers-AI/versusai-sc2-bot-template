@@ -25,15 +25,26 @@ pip install --upgrade burnysc2
 ```
 or directly from develop branch:
 ```
-pip install pipenv
+pip install poetry
 pip install --upgrade --force-reinstall https://github.com/BurnySc2/python-sc2/archive/develop.zip
 ```
-Both commands will use the `sc2` library folder, so you will not be able to have Dentosal's and this fork installed at the same time, unless you use virtual environments or pipenv.
+Both commands will use the `sc2` library folder, so you will not be able to have Dentosal's and this fork installed at the same time, unless you use virtual environments or poetry.
 
-You'll need a StarCraft II executable. If you are running Windows or macOS, just install the normal SC2 from blizzard app. [The free starter edition works too](https://us.battle.net/account/sc2/starter-edition/). Linux users get the best experience by installing the Windows version of StarCraft II with [Wine](https://www.winehq.org). Linux user can also use the [Linux binary](https://github.com/Blizzard/s2client-proto#downloads), but it's headless so you cannot actually see the game.
+### StarCraft II
+You'll need a StarCraft II executable. If you are running Windows or macOS, just install the normal SC2 from blizzard app. [The free starter edition works too.](https://us.battle.net/account/sc2/starter-edition/). Linux users get the best experience by installing the Windows version of StarCraft II with [Wine](https://www.winehq.org). Linux user can also use the [Linux binary](https://github.com/Blizzard/s2client-proto#downloads), but it's headless so you cannot actually see the game.
 
-You probably want some maps too. Official map downloads are available from [Blizzard/s2client-proto](https://github.com/Blizzard/s2client-proto#downloads). Notice: the map files are to be extracted into *subdirectories* of the `install-dir/Maps` directory.
-Maps that are run on the [SC2 AI Ladder](http://sc2ai.net/) and [SC2 AI Arena](https://ai-arena.net/) can be downloaded [from the sc2ai wiki](http://wiki.sc2ai.net/Ladder_Maps) and [the ai-arena wiki](https://ai-arena.net/wiki/getting-started/#wiki-toc-maps).
+### Maps
+You probably want some maps too.
+
+#### Official maps
+Official Blizzard map downloads are available from [Blizzard/s2client-proto](https://github.com/Blizzard/s2client-proto#downloads).  
+Extract these maps into their respective *subdirectories* in the SC2 maps directory.  
+e.g. `install-dir/Maps/Ladder2017Season1/`
+
+#### Bot ladder maps
+Maps that are run on the [SC2 AI Ladder](http://sc2ai.net/) and [SC2 AI Arena](https://aiarena.net/) can be downloaded [from the sc2ai wiki](http://wiki.sc2ai.net/Ladder_Maps) and [the aiarena wiki](https://aiarena.net/wiki/bot-development/getting-started/#wiki-toc-maps).   
+**Extract these maps into the *root* of the SC2 maps directory** (otherwise ladder replays won't work).  
+e.g. `install-dir/Maps/AcropolisLE.SC2Map`
 
 ### Running
 
@@ -42,6 +53,8 @@ After installing the library, a StarCraft II executable, and some maps, you're r
 ```python
 python3 examples/protoss/cannon_rush.py
 ```
+
+#### WINE and Lutris
 
 If you installed StarCraft II on Linux with Wine or Lutris, set the following environment variables (either globally or within your development environment, e.g. Pycharm: `Run -> Edit Configurations -> Environment Variables`):
 
@@ -53,6 +66,27 @@ WINE=usr/bin/wine
 # Default Lutris StarCraftII Installation path:
 SC2PATH=/home/burny/Games/battlenet/drive_c/Program Files (x86)/StarCraft II/
 ```
+
+#### WSL
+
+When running WSL in Windows, python-sc2 detects WSL by default and starts Windows Starcraft 2 instead of Linux Starcraft 2.
+If you wish to instead have the game played in Linux, you can disable this behavior by setting `SC2_WSL_DETECT`
+environment variable to "0". You can do this inside python with the following code:
+```py
+import os
+os.environ["SC2_WSL_DETECT"] = "0"
+```  
+
+WSL version 1 should not require any configuration. You may be asked to allow Python through your firewall.
+
+When running WSL version 2 you need to supply the following environment variables so that your bot can connect:
+
+```sh
+SC2CLIENTHOST=<your windows IP>
+SC2SERVERHOST=0.0.0.0
+```
+
+You can find your Windows IP using `ipconfig /all` from `PowerShell.exe` or `CMD.exe`.
 
 ## Example
 
@@ -124,7 +158,7 @@ class MyBot(sc2.BotAI):
 
 ## Community - Help and support
 
-You have questions but don't want to create an issue? Join the [Starcraft 2 AI Discord server](https://discordapp.com/invite/zXHU4wM) or [ai-arena.net Discord server](https://discord.gg/yDBzbtC). Questions about this repository can be asked in text channel #python. There are discussions and questions about SC2 bot programming and this repository every day.
+You have questions but don't want to create an issue? Join the [Starcraft 2 AI Discord server](https://discordapp.com/invite/zXHU4wM) or [aiarena.net Discord server](https://discord.gg/yDBzbtC). Questions about this repository can be asked in text channel #python. There are discussions and questions about SC2 bot programming and this repository every day.
 
 ## Bug reports, feature requests and ideas
 

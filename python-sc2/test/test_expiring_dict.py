@@ -1,4 +1,5 @@
-import sys, os
+import os
+import sys
 
 sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
 
@@ -79,7 +80,6 @@ def test_class():
     new_key = test.pop("new_key")
     assert new_key == "my_new_value"
 
-
     # Advance the frames by 10, this means all entries should now be invalid
     bot.increment(10)
 
@@ -104,6 +104,7 @@ def test_class():
     test["setitem"] = "test"
     assert repr(test) == "ExpiringDict('another_test': ('yep this one also worked', 11), 'setitem': ('test', 11))"
     assert str(test) == "ExpiringDict('another_test': ('yep this one also worked', 11), 'setitem': ('test', 11))"
+
 
 if __name__ == "__main__":
     test_class()

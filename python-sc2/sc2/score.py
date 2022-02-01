@@ -1,8 +1,7 @@
 class ScoreDetails:
-    """ Accessable in self.state.score during step function
+    """Accessable in self.state.score during step function
     For more information, see https://github.com/Blizzard/s2client-proto/blob/master/s2clientprotocol/score.proto
     """
-
     def __init__(self, proto):
         self._data = proto
         self._proto = proto.score_details
@@ -13,10 +12,10 @@ class ScoreDetails:
         TODO this is super ugly, how can we improve this summary?
         Print summary to file with:
         In on_step:
-        
+
         with open("stats.txt", "w+") as file:
             for stat in self.state.score.summary:
-                file.write(f"{stat[0]:<35} {float(stat[1]):>35.3f}\n")              
+                file.write(f"{stat[0]:<35} {float(stat[1]):>35.3f}\n")
         """
         values = [
             "score_type",

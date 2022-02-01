@@ -1,21 +1,26 @@
-import sys, os
+import os
+import sys
 
 sys.path.append(os.path.join(os.path.dirname(__file__), "../.."))
 
-import random, numpy as np
+import random
+from typing import Set
 
-import sc2
-from sc2 import Race, Difficulty
-from sc2.constants import *
+import numpy as np
+
+from sc2 import maps
+from sc2.bot_ai import BotAI
+from sc2.data import Difficulty, Race
+from sc2.ids.ability_id import AbilityId
+from sc2.ids.unit_typeid import UnitTypeId
+from sc2.main import run_game
 from sc2.player import Bot, Computer
 from sc2.position import Point2, Point3
 from sc2.unit import Unit
 from sc2.units import Units
 
-from typing import List, Set
 
-
-class RampWallBot(sc2.BotAI):
+class RampWallBot(BotAI):
     def __init__(self):
         self.unit_command_uses_self_do = False
 
@@ -49,6 +54,9 @@ class RampWallBot(sc2.BotAI):
         # Draw ramp points
         self.draw_ramp_points()
 
+        # Draw all detected expansions on the map
+        self.draw_expansions()
+
         # # Draw pathing grid
         # self.draw_pathing_grid()
 
@@ -80,7 +88,8 @@ class RampWallBot(sc2.BotAI):
         # Filter locations close to finished supply depots
         if depots:
             depot_placement_positions: Set[Point2] = {
-                d for d in depot_placement_positions if depots.closest_distance_to(d) > 1
+                d
+                for d in depot_placement_positions if depots.closest_distance_to(d) > 1
             }
 
         # Build depots
@@ -121,12 +130,19 @@ class RampWallBot(sc2.BotAI):
                     color = Point3((0, 255, 255))
                 if p in ramp.lower:
                     color = Point3((0, 0, 255))
-                self._client.debug_box2_out(pos, half_vertex_length=0.25, color=color)
+                self._client.debug_box2_out(pos + Point2((0.5, 0.5)), half_vertex_length=0.25, color=color)
                 # Identical to above:
-                # p0 = Point3((pos.x - 0.25, pos.y - 0.25, pos.z + 0.25))
-                # p1 = Point3((pos.x + 0.25, pos.y + 0.25, pos.z - 0.25))
+                # p0 = Point3((pos.x + 0.25, pos.y + 0.25, pos.z + 0.25))
+                # p1 = Point3((pos.x + 0.75, pos.y + 0.75, pos.z - 0.25))
                 # print(f"Drawing {p0} to {p1}")
                 # self._client.debug_box_out(p0, p1, color=color)
+
+    def draw_expansions(self):
+        green = Point3((0, 255, 0))
+        for expansion_pos in self.expansion_locations_list:
+            height = self.get_terrain_z_height(expansion_pos)
+            expansion_pos3 = Point3((*expansion_pos, height))
+            self._client.debug_box2_out(expansion_pos3, half_vertex_length=2.5, color=green)
 
     def draw_pathing_grid(self):
         map_area = self._game_info.playable_area
@@ -265,9 +281,9 @@ def main():
             "HonorgroundsLE",  # Has 4 or 9 upper points at the large main base ramp
         ]
     )
-    # map = "ParaSiteLE"
-    sc2.run_game(
-        sc2.maps.get(map),
+    map = "PillarsofGoldLE"
+    run_game(
+        maps.get(map),
         [Bot(Race.Terran, RampWallBot()), Computer(Race.Zerg, Difficulty.Hard)],
         realtime=True,
         # sc2_version="4.10.1",

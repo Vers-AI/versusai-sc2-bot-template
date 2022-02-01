@@ -1,14 +1,10 @@
 from importlib import reload
-import argparse
-
-import sys
-import asyncio
-
-import sc2
-from sc2 import Race, Difficulty
-from sc2.player import Bot, Computer
 
 from zerg import zerg_rush
+
+import sc2
+from sc2 import Difficulty, Race
+from sc2.player import Bot, Computer
 
 
 def main():
@@ -16,9 +12,8 @@ def main():
 
     gen = sc2.main._host_game_iter(sc2.maps.get("Abyssal Reef LE"), player_config, realtime=False)
 
+    r = next(gen)
     while True:
-        r = next(gen)
-
         input("Press enter to reload ")
 
         reload(zerg_rush)
