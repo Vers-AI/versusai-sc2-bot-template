@@ -1,4 +1,5 @@
 from sc2.bot_ai import BotAI, Race
+from sc2.data import Result
 
 
 class CompetitiveBot(BotAI):
@@ -21,14 +22,14 @@ class CompetitiveBot(BotAI):
         """
         print("Game started")
 
-    async def on_step(self, iteration):
+    async def on_step(self, iteration: int):
         """
         This code runs continually throughout the game
         Populate this function with whatever your bot should do!
         """
         pass
 
-    def on_end(self, result):
+    async def on_end(self, result: Result):
         """
         This code runs once at the end of the game
         Do things here after the game ends

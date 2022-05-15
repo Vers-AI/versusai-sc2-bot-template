@@ -44,7 +44,7 @@ ladderbots_json_template = """{
 }"""
 
 
-def generate_ladderbots_json():
+def generate_ladderbots_json() -> str:
     return ladderbots_json_template.replace("[NAME]", bot.NAME).replace("[RACE]", str(bot.RACE).split(".")[1])
 
 

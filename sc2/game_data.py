@@ -1,3 +1,4 @@
+# pylint: disable=W0212
 from __future__ import annotations
 
 from bisect import bisect_left
@@ -17,6 +18,7 @@ FREE_ABILITIES = {"Lower", "Raise", "Land", "Lift", "Hold", "Harvest"}
 
 
 class GameData:
+
     def __init__(self, data):
         """
         :param data:
@@ -126,6 +128,7 @@ class AbilityData:
 
 
 class UnitTypeData:
+
     def __init__(self, game_data: GameData, proto):
         """
         :param game_data:
@@ -229,12 +232,8 @@ class UnitTypeData:
     def cost_zerg_corrected(self) -> Cost:
         """ This returns 25 for extractor and 200 for spawning pool instead of 75 and 250 respectively """
         if self.race == Race.Zerg and Attribute.Structure.value in self.attributes:
-            # a = self._game_data.units(UnitTypeId.ZERGLING)
-            # print(a)
-            # print(vars(a))
             return Cost(self._proto.mineral_cost - 50, self._proto.vespene_cost, self._proto.build_time)
-        else:
-            return self.cost
+        return self.cost
 
     @property
     def morph_cost(self) -> Optional[Cost]:
@@ -273,6 +272,7 @@ class UnitTypeData:
 
 
 class UpgradeData:
+
     def __init__(self, game_data: GameData, proto):
         """
         :param game_data:
@@ -306,6 +306,7 @@ class Cost:
     The cost of an action, a structure, a unit or a research upgrade.
     The time is given in frames (22.4 frames per game second).
     """
+
     def __init__(self, minerals: int, vespene: int, time: float = None):
         """
         :param minerals:
