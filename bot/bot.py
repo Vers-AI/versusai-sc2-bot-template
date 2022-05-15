@@ -1,9 +1,10 @@
-from sc2 import BotAI, Race
+from sc2.bot_ai import BotAI, Race
 
 
 class CompetitiveBot(BotAI):
     NAME: str = "CompetitiveBot"
     """This bot's name"""
+
     RACE: Race = Race.Terran
     """This bot's Starcraft 2 race.
     Options are:
@@ -14,13 +15,22 @@ class CompetitiveBot(BotAI):
     """
 
     async def on_start(self):
+        """
+        This code runs once at the start of the game
+        Do things here before the game starts
+        """
         print("Game started")
-        # Do things here before the game starts
 
     async def on_step(self, iteration):
-        # Populate this function with whatever your bot should do!
+        """
+        This code runs continually throughout the game
+        Populate this function with whatever your bot should do!
+        """
         pass
 
     def on_end(self, result):
+        """
+        This code runs once at the end of the game
+        Do things here after the game ends
+        """
         print("Game ended.")
-        # Do things here after the game ends

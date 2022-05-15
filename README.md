@@ -49,8 +49,7 @@ Create and activate a virtual environment:
 ```bash
 python -m venv venv
 # and then...
-venv\Scripts\Activate.ps1 # Windows PowerShell
-venv\Scripts\activate.bat # Windows CMD Prompt
+venv\Scripts\activate # Windows CMD Prompt / PowerShell
 source venv/bin/activate # Mac OS / Linux
 ```
 Install our bot's Python requirements:
@@ -84,7 +83,3 @@ python create_ladder_zip.py
 ```
 This will create the zip file`publish\bot.zip`.
 You can then distribute this zip file to competitions.
-
-# Troubleshooting
-
-_to be filled in_
