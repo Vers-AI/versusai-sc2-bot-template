@@ -1,9 +1,11 @@
+from __future__ import annotations
+
 from loguru import logger
 
 from sc2.paths import Paths
 
 
-def get(name=None):
+def get(name=None) -> Map:
     maps = []
     for mapdir in (p for p in Paths.MAPS.iterdir()):
         if mapdir.is_dir():
@@ -25,6 +27,7 @@ def get(name=None):
 
 
 class Map:
+
     def __init__(self, path):
         self.path = path
 
