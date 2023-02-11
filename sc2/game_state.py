@@ -198,6 +198,7 @@ class GameState:
     def __init__(self, response_observation, previous_observation=None):
         """
         :param response_observation:
+        :param previous_observation:
         """
         # Only filled in realtime=True in case the bot skips frames
         self.previous_observation = previous_observation
@@ -220,9 +221,9 @@ class GameState:
         self.upgrades: Set[UpgradeId] = {UpgradeId(upgrade) for upgrade in self.observation_raw.player.upgrade_ids}
 
         # self.visibility[point]: 0=Hidden, 1=Fogged, 2=Visible
-        self.visibility: PixelMap = PixelMap(self.observation_raw.map_state.visibility, mirrored=False)
+        self.visibility: PixelMap = PixelMap(self.observation_raw.map_state.visibility)
         # self.creep[point]: 0=No creep, 1=creep
-        self.creep: PixelMap = PixelMap(self.observation_raw.map_state.creep, in_bits=True, mirrored=False)
+        self.creep: PixelMap = PixelMap(self.observation_raw.map_state.creep, in_bits=True)
 
         # Effects like ravager bile shot, lurker attack, everything in effect_id.py
         self.effects: Set[EffectData] = {EffectData(effect) for effect in self.observation_raw.effects}

@@ -1,8 +1,10 @@
 from __future__ import annotations
 
+import heapq
 from collections import deque
+from dataclasses import dataclass
 from functools import cached_property
-from typing import Any, Deque, Dict, FrozenSet, Iterable, List, Optional, Set, Tuple
+from typing import Deque, Dict, FrozenSet, Iterable, List, Optional, Set, Tuple
 
 import numpy as np
 
@@ -11,46 +13,38 @@ from sc2.player import Player, Race
 from sc2.position import Point2, Rect, Size
 
 
+@dataclass
 class Ramp:
+    points: FrozenSet[Point2]
+    game_info: GameInfo
 
-    def __init__(self, points: FrozenSet[Point2], game_info: GameInfo):
-        """
-        :param points:
-        :param game_info:
-        """
-        self.cache: Dict[str, Any] = {}
-        self._points: FrozenSet[Point2] = points
-        self.__game_info = game_info
+    @property
+    def x_offset(self) -> float:
         # Tested by printing actual building locations vs calculated depot positions
-        self.x_offset = 0.5
-        self.y_offset = 0.5
-        self.cache = {}
+        return 0.5
+
+    @property
+    def y_offset(self) -> float:
+        # Tested by printing actual building locations vs calculated depot positions
+        return 0.5
 
     @cached_property
     def _height_map(self):
-        return self.__game_info.terrain_height
-
-    @cached_property
-    def _placement_grid(self):
-        return self.__game_info.placement_grid
+        return self.game_info.terrain_height
 
     @cached_property
     def size(self) -> int:
-        return len(self._points)
+        return len(self.points)
 
     def height_at(self, p: Point2) -> int:
         return self._height_map[p]
-
-    @cached_property
-    def points(self) -> FrozenSet[Point2]:
-        return self._points.copy()
 
     @cached_property
     def upper(self) -> FrozenSet[Point2]:
         """ Returns the upper points of a ramp. """
         current_max = -10000
         result = set()
-        for p in self._points:
+        for p in self.points:
             height = self.height_at(p)
             if height > current_max:
                 current_max = height
@@ -62,25 +56,20 @@ class Ramp:
     @cached_property
     def upper2_for_ramp_wall(self) -> FrozenSet[Point2]:
         """ Returns the 2 upper ramp points of the main base ramp required for the supply depot and barracks placement properties used in this file. """
-        if len(self.upper) > 5:
-            # NOTE: this was way too slow on large ramps
-            return frozenset()  # HACK: makes this work for now
-            # FIXME: please do
-
-        return frozenset(sorted(self.upper, key=lambda x: x.distance_to_point2(self.bottom_center), reverse=True)[:2])
+        # From bottom center, find 2 points that are furthest away (within the same ramp)
+        return frozenset(heapq.nlargest(2, self.upper, key=lambda x: x.distance_to_point2(self.bottom_center)))
 
     @cached_property
     def top_center(self) -> Point2:
-        upper = self.upper
-        length = len(upper)
-        pos = Point2((sum(p.x for p in upper) / length, sum(p.y for p in upper) / length))
+        length = len(self.upper)
+        pos = Point2((sum(p.x for p in self.upper) / length, sum(p.y for p in self.upper) / length))
         return pos
 
     @cached_property
     def lower(self) -> FrozenSet[Point2]:
         current_min = 10000
         result = set()
-        for p in self._points:
+        for p in self.points:
             height = self.height_at(p)
             if height < current_min:
                 current_min = height
@@ -91,9 +80,8 @@ class Ramp:
 
     @cached_property
     def bottom_center(self) -> Point2:
-        lower = self.lower
-        length = len(lower)
-        pos = Point2((sum(p.x for p in lower) / length, sum(p.y for p in lower) / length))
+        length = len(self.lower)
+        pos = Point2((sum(p.x for p in self.lower) / length, sum(p.y for p in self.lower) / length))
         return pos
 
     @cached_property
@@ -126,8 +114,8 @@ class Ramp:
             except AssertionError:
                 # Returns None when no placement was found, this is the case on the map Honorgrounds LE with an exceptionally large main base ramp
                 return None
-            anyLowerPoint = next(iter(self.lower))
-            return max(intersects, key=lambda p: p.distance_to_point2(anyLowerPoint))
+            any_lower_point = next(iter(self.lower))
+            return max(intersects, key=lambda p: p.distance_to_point2(any_lower_point))
         raise Exception("Not implemented. Trying to access a ramp that has a wrong amount of upper points.")
 
     @cached_property
@@ -140,11 +128,11 @@ class Ramp:
             p1 = points.pop().offset((self.x_offset, self.y_offset))
             p2 = points.pop().offset((self.x_offset, self.y_offset))
             center = p1.towards(p2, p1.distance_to_point2(p2) / 2)
-            depotPosition = self.depot_in_middle
-            if depotPosition is None:
+            depot_position = self.depot_in_middle
+            if depot_position is None:
                 return frozenset()
             # Offset from middle depot to corner depots is (2, 1)
-            intersects = center.circle_intersection(depotPosition, 5**0.5)
+            intersects = center.circle_intersection(depot_position, 5**0.5)
             return intersects
         raise Exception("Not implemented. Trying to access a ramp that has a wrong amount of upper points.")
 
@@ -182,24 +170,24 @@ class Ramp:
         return middle + 6 * direction
 
     @cached_property
-    def protoss_wall_buildings(self) -> List[Point2]:
+    def protoss_wall_buildings(self) -> FrozenSet[Point2]:
         """
         List of two positions for 3x3 buildings that form a wall with a spot for a one unit block.
         These buildings can be powered by a pylon on the protoss_wall_pylon position.
         """
         if len(self.upper) not in {2, 5}:
-            return []
+            return frozenset()
         if len(self.upper2_for_ramp_wall) == 2:
             middle = self.depot_in_middle
             # direction up the ramp
             direction = self.barracks_in_middle.negative_offset(middle)
             # sort depots based on distance to start to get wallin orientation
             sorted_depots = sorted(
-                self.corner_depots, key=lambda depot: depot.distance_to(self.__game_info.player_start_location)
+                self.corner_depots, key=lambda depot: depot.distance_to(self.game_info.player_start_location)
             )
-            wall1 = sorted_depots[1].offset(direction)
+            wall1: Point2 = sorted_depots[1].offset(direction)
             wall2 = middle + direction + (middle - wall1) / 1.5
-            return [wall1, wall2]
+            return frozenset([wall1, wall2])
         raise Exception("Not implemented. Trying to access a ramp that has a wrong amount of upper points.")
 
     @cached_property
@@ -216,7 +204,7 @@ class Ramp:
         # direction up the ramp
         direction = self.barracks_in_middle.negative_offset(middle)
         # sort depots based on distance to start to get wallin orientation
-        sorted_depots = sorted(self.corner_depots, key=lambda x: x.distance_to(self.__game_info.player_start_location))
+        sorted_depots = sorted(self.corner_depots, key=lambda x: x.distance_to(self.game_info.player_start_location))
         return sorted_depots[0].negative_offset(direction)
 
 
@@ -230,11 +218,11 @@ class GameInfo:
         self.map_size: Size = Size.from_proto(self._proto.start_raw.map_size)
 
         # self.pathing_grid[point]: if 0, point is not pathable, if 1, point is pathable
-        self.pathing_grid: PixelMap = PixelMap(self._proto.start_raw.pathing_grid, in_bits=True, mirrored=False)
+        self.pathing_grid: PixelMap = PixelMap(self._proto.start_raw.pathing_grid, in_bits=True)
         # self.terrain_height[point]: returns the height in range of 0 to 255 at that point
-        self.terrain_height: PixelMap = PixelMap(self._proto.start_raw.terrain_height, mirrored=False)
+        self.terrain_height: PixelMap = PixelMap(self._proto.start_raw.terrain_height)
         # self.placement_grid[point]: if 0, point is not placeable, if 1, point is pathable
-        self.placement_grid: PixelMap = PixelMap(self._proto.start_raw.placement_grid, in_bits=True, mirrored=False)
+        self.placement_grid: PixelMap = PixelMap(self._proto.start_raw.placement_grid, in_bits=True)
         self.playable_area = Rect.from_proto(self._proto.start_raw.playable_area)
         self.map_center = self.playable_area.center
         self.map_ramps: List[Ramp] = None  # Filled later by BotAI._prepare_first_step
@@ -243,7 +231,9 @@ class GameInfo:
             p.player_id: p.race_actual or p.race_requested
             for p in self._proto.player_info
         }
-        self.start_locations: List[Point2] = [Point2.from_proto(sl) for sl in self._proto.start_raw.start_locations]
+        self.start_locations: List[Point2] = [
+            Point2.from_proto(sl).round(decimals=1) for sl in self._proto.start_raw.start_locations
+        ]
         self.player_start_location: Point2 = None  # Filled later by BotAI._prepare_first_step
 
     def _find_ramps_and_vision_blockers(self) -> Tuple[List[Ramp], FrozenSet[Point2]]:
@@ -285,7 +275,7 @@ class GameInfo:
         def paint(pt: Point2) -> None:
             picture[pt.y][pt.x] = current_color
 
-        nearby = [(a, b) for a in [-1, 0, 1] for b in [-1, 0, 1] if a != 0 or b != 0]
+        nearby: List[Tuple[int, int]] = [(a, b) for a in [-1, 0, 1] for b in [-1, 0, 1] if a != 0 or b != 0]
 
         remaining: Set[Point2] = set(points)
         for point in remaining:
@@ -303,6 +293,7 @@ class GameInfo:
                 base: Point2 = queue.popleft()
                 for offset in nearby:
                     px, py = base.x + offset[0], base.y + offset[1]
+                    # Do we ever reach out of map bounds?
                     if not (0 <= px < map_width and 0 <= py < map_height):
                         continue
                     if picture[py][px] != NOT_COLORED_YET:
