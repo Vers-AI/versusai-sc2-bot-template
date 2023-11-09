@@ -29,6 +29,20 @@ Linux users can either download the Blizzard SC2 Linux package [here](https://gi
 
 SC2 should be installed in the default location. Otherwise (and for Linux) you might need to create the SC2PATH environment variable to point to the SC2 install location.
 
+## Environment Setup for Linux (Lutris)
+
+If you've installed StarCraft II using Lutris on Linux, you'll need to set some environment variables so that the `python-sc2` library can correctly interact with the game.
+
+### Setting Environment Variables Temporarily
+
+Open a terminal and enter the following commands, replacing `(username)` with your actual Linux username and `(version of wine)` with the version of Wine that Lutris is using:
+
+```bash
+export SC2PF=WineLinux
+export SC2PATH="/home/`(username)`/Games/battlenet/drive_c/Program Files (x86)/StarCraft II/"
+export WINE="/home/`(username)`/.local/share/lutris/runners/wine/`(version of wine)`/bin/wine" 
+```
+
 ##### Starcraft 2 Maps
 
 Download the Starcraft 2 Maps from [here](https://github.com/Blizzard/s2client-proto#map-packs).   For this tutorial you will at least need the 'Melee' pack.  
