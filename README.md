@@ -1,4 +1,4 @@
-# python-sc2-bot-template
+# probots-sc2-bot-template
 
 Use this template to start a new Starcraft 2 bot using the [python-sc2](https://github.com/BurnySc2/python-sc2) framework.  
 Then, if you need, follow the tutorial below.  
