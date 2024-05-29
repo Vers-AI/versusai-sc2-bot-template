@@ -88,6 +88,100 @@ You can specify both of these in the [bot/bot.py](bot/bot.py) file, in the `Comp
 
 As you add features to your bot make sure all your new code files are in the `bot` folder. This folder is included when creating the ladder.zip for upload to the bot ladders.
 
+## Upgrading to Ares Framework
+
+Ares-sc2 is a library that extends python-sc2, offering advanced tools and functionalities to give you greater control over your bot's strategic decisions. If you want more sophisticated and nuanced gameplay tactics, upgrading to Ares-sc2 is the way to go.
+
+### Running the Upgrade Script
+
+Run the following command:
+```bash
+python upgrade_to_ares.py
+```
+
+### Code Changes
+
+#### Updating the Bot Object
+
+The main bot object should inherit from `ares-sc2` instead of `python-sc2`.
+
+**python-sc2:**
+```python
+from sc2.bot_ai import BotAI
+
+class MyBot(BotAI):
+    pass
+```
+
+**ares-sc2:**
+```python
+from ares import AresBot
+
+class MyBot(AresBot):
+    pass
+```
+
+#### Adding Super Calls to Hook Methods
+
+For any `python-sc2` hook methods you use, add a `super` call. Only convert the hooks you actually use.
+
+**python-sc2:**
+```python
+class MyBot(AresBot):
+    async def on_step(self, iteration: int) -> None:
+        pass
+
+    async def on_start(self, iteration: int) -> None:
+        pass
+
+    async def on_end(self, game_result: Result) -> None:
+        pass
+
+    async def on_building_construction_complete(self, unit: Unit) -> None:
+        pass
+
+    async def on_unit_created(self, unit: Unit) -> None:
+        pass
+
+    async def on_unit_destroyed(self, unit_tag: int) -> None:
+        pass
+
+    async def on_unit_took_damage(self, unit: Unit, amount_damage_taken: float) -> None:
+        pass
+```
+
+**ares-sc2:**
+```python
+class MyBot(AresBot):
+    async def on_step(self, iteration: int) -> None:
+        await super(MyBot, self).on_step(iteration)
+        # on_step logic here ...
+
+    async def on_start(self, iteration: int) -> None:
+        await super(MyBot, self).on_start(iteration)
+        # on_start logic here ...
+
+    async def on_end(self, game_result: Result) -> None:
+        await super(MyBot, self).on_end(game_result)
+        # custom on_end logic here ...
+
+    async def on_building_construction_complete(self, unit: Unit) -> None:
+        await super(MyBot, self).on_building_construction_complete(unit)
+        # custom on_building_construction_complete logic here ...
+
+    async def on_unit_created(self, unit: Unit) -> None:
+        await super(MyBot, self).on_unit_created(unit)
+        # custom on_unit_created logic here ...
+
+    async def on_unit_destroyed(self, unit_tag: int) -> None:
+        await super(MyBot, self).on_unit_destroyed(unit_tag)
+        # custom on_unit_destroyed logic here ...
+
+    async def on_unit_took_damage(self, unit: Unit, amount_damage_taken: float) -> None:
+        await super(MyBot, self).on_unit_took_damage(unit, amount_damage_taken)
+        # custom on_unit_took_damage logic here ...
+```
+
 ## Competing with your bot
 
 To compete with your bot, you will first need zip up your bot, ready for distribution.   
