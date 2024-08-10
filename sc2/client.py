@@ -31,7 +31,7 @@ class Client(Protocol):
         """
         super().__init__(ws)
         # How many frames will be waited between iterations before the next one is called
-        self.game_step: int = 8
+        self.game_step: int = 4
         self.save_replay_path: Optional[str] = save_replay_path
         self._player_id = None
         self._game_result = None
@@ -221,7 +221,7 @@ class Client(Protocol):
             return None
         return distance
 
-    async def query_pathings(self, zipped_list: List[List[Union[Unit, Point2, Point3]]]) -> List[Union[float, int]]:
+    async def query_pathings(self, zipped_list: List[List[Union[Unit, Point2, Point3]]]) -> List[float]:
         """Usage: await self.query_pathings([[unit1, target2], [unit2, target2]])
         -> returns [distance1, distance2]
         Caution: returns 0 when path not found

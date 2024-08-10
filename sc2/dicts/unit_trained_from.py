@@ -5,8 +5,8 @@ from typing import Dict, Set
 
 from sc2.ids.unit_typeid import UnitTypeId
 
-# from ..ids.buff_id import BuffId
-# from ..ids.effect_id import EffectId
+# from sc2.ids.buff_id import BuffId
+# from sc2.ids.effect_id import EffectId
 
 UNIT_TRAINED_FROM: Dict[UnitTypeId, Set[UnitTypeId]] = {
     UnitTypeId.ADEPT: {UnitTypeId.GATEWAY, UnitTypeId.WARPGATE},
@@ -25,9 +25,7 @@ UNIT_TRAINED_FROM: Dict[UnitTypeId, Set[UnitTypeId]] = {
     UnitTypeId.COLOSSUS: {UnitTypeId.ROBOTICSFACILITY},
     UnitTypeId.COMMANDCENTER: {UnitTypeId.SCV},
     UnitTypeId.CORRUPTOR: {UnitTypeId.LARVA},
-    UnitTypeId.CREEPTUMOR: {
-        UnitTypeId.CREEPTUMOR, UnitTypeId.CREEPTUMORBURROWED, UnitTypeId.CREEPTUMORQUEEN, UnitTypeId.QUEEN
-    },
+    UnitTypeId.CREEPTUMOR: {UnitTypeId.CREEPTUMOR, UnitTypeId.CREEPTUMORBURROWED, UnitTypeId.QUEEN},
     UnitTypeId.CREEPTUMORQUEEN: {UnitTypeId.QUEEN},
     UnitTypeId.CYBERNETICSCORE: {UnitTypeId.PROBE},
     UnitTypeId.CYCLONE: {UnitTypeId.FACTORY},

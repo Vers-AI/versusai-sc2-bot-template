@@ -7,8 +7,8 @@ from sc2.ids.ability_id import AbilityId
 from sc2.ids.unit_typeid import UnitTypeId
 from sc2.ids.upgrade_id import UpgradeId
 
-# from ..ids.buff_id import BuffId
-# from ..ids.effect_id import EffectId
+# from sc2.ids.buff_id import BuffId
+# from sc2.ids.effect_id import EffectId
 
 RESEARCH_INFO: Dict[UnitTypeId, Dict[UpgradeId, Dict[str, Union[AbilityId, bool, UnitTypeId, UpgradeId]]]] = {
     UnitTypeId.ARMORY: {
@@ -183,15 +183,15 @@ RESEARCH_INFO: Dict[UnitTypeId, Dict[UpgradeId, Dict[str, Union[AbilityId, bool,
         }
     },
     UnitTypeId.FACTORYTECHLAB: {
-        UpgradeId.CYCLONELOCKONDAMAGEUPGRADE: {
-            'ability': AbilityId.RESEARCH_CYCLONELOCKONDAMAGE
-        },
         UpgradeId.DRILLCLAWS: {
             'ability': AbilityId.RESEARCH_DRILLINGCLAWS,
             'required_building': UnitTypeId.ARMORY
         },
         UpgradeId.HIGHCAPACITYBARRELS: {
             'ability': AbilityId.RESEARCH_INFERNALPREIGNITER
+        },
+        UpgradeId.HURRICANETHRUSTERS: {
+            'ability': AbilityId.FACTORYTECHLABRESEARCH_CYCLONERESEARCHHURRICANETHRUSTERS
         },
         UpgradeId.SMARTSERVOS: {
             'ability': AbilityId.RESEARCH_SMARTSERVOS,
@@ -269,14 +269,11 @@ RESEARCH_INFO: Dict[UnitTypeId, Dict[UpgradeId, Dict[str, Union[AbilityId, bool,
         UpgradeId.LIBERATORAGRANGEUPGRADE: {
             'ability': AbilityId.FUSIONCORERESEARCH_RESEARCHBALLISTICRANGE
         },
-        UpgradeId.MEDIVACINCREASESPEEDBOOST: {
-            'ability': AbilityId.FUSIONCORERESEARCH_RESEARCHRAPIDREIGNITIONSYSTEM
+        UpgradeId.MEDIVACCADUCEUSREACTOR: {
+            'ability': AbilityId.FUSIONCORERESEARCH_RESEARCHMEDIVACENERGYUPGRADE
         }
     },
     UnitTypeId.GHOSTACADEMY: {
-        UpgradeId.ENHANCEDSHOCKWAVES: {
-            'ability': AbilityId.GHOSTACADEMYRESEARCH_RESEARCHENHANCEDSHOCKWAVES
-        },
         UpgradeId.PERSONALCLOAKING: {
             'ability': AbilityId.RESEARCH_PERSONALCLOAKING
         }
@@ -334,9 +331,6 @@ RESEARCH_INFO: Dict[UnitTypeId, Dict[UpgradeId, Dict[str, Union[AbilityId, bool,
         }
     },
     UnitTypeId.INFESTATIONPIT: {
-        UpgradeId.INFESTORENERGYUPGRADE: {
-            'ability': AbilityId.RESEARCH_PATHOGENGLANDS
-        },
         UpgradeId.NEURALPARASITE: {
             'ability': AbilityId.RESEARCH_NEURALPARASITE
         }
@@ -427,8 +421,8 @@ RESEARCH_INFO: Dict[UnitTypeId, Dict[UpgradeId, Dict[str, Union[AbilityId, bool,
         UpgradeId.BANSHEESPEED: {
             'ability': AbilityId.RESEARCH_BANSHEEHYPERFLIGHTROTORS
         },
-        UpgradeId.RAVENCORVIDREACTOR: {
-            'ability': AbilityId.RESEARCH_RAVENCORVIDREACTOR
+        UpgradeId.INTERFERENCEMATRIX: {
+            'ability': AbilityId.STARPORTTECHLABRESEARCH_RESEARCHRAVENINTERFERENCEMATRIX
         }
     },
     UnitTypeId.TEMPLARARCHIVE: {

@@ -2,18 +2,21 @@
 from __future__ import annotations
 
 from bisect import bisect_left
+from contextlib import suppress
+from dataclasses import dataclass
 from functools import lru_cache
-from typing import Dict, List, Optional
+from typing import Dict, List, Optional, Union
 
 from sc2.data import Attribute, Race
-from sc2.dicts.unit_trained_from import UNIT_TRAINED_FROM
 from sc2.ids.ability_id import AbilityId
 from sc2.ids.unit_typeid import UnitTypeId
 from sc2.unit_command import UnitCommand
 
+with suppress(ImportError):
+    from sc2.dicts.unit_trained_from import UNIT_TRAINED_FROM
+
 # Set of parts of names of abilities that have no cost
 # E.g every ability that has 'Hold' in its name is free
-# TODO move to constants, add more?
 FREE_ABILITIES = {"Lower", "Raise", "Land", "Lift", "Hold", "Harvest"}
 
 
@@ -24,20 +27,22 @@ class GameData:
         :param data:
         """
         ids = set(a.value for a in AbilityId if a.value != 0)
-        self.abilities = {a.ability_id: AbilityData(self, a) for a in data.abilities if a.ability_id in ids}
-        self.units = {u.unit_id: UnitTypeData(self, u) for u in data.units if u.available}
-        self.upgrades = {u.upgrade_id: UpgradeData(self, u) for u in data.upgrades}
+        self.abilities: Dict[int, AbilityData] = {
+            a.ability_id: AbilityData(self, a)
+            for a in data.abilities if a.ability_id in ids
+        }
+        self.units: Dict[int, UnitTypeData] = {u.unit_id: UnitTypeData(self, u) for u in data.units if u.available}
+        self.upgrades: Dict[int, UpgradeData] = {u.upgrade_id: UpgradeData(self, u) for u in data.upgrades}
         # Cached UnitTypeIds so that conversion does not take long. This needs to be moved elsewhere if a new GameData object is created multiple times per game
-        self.unit_types: Dict[int, UnitTypeId] = {}
 
     @lru_cache(maxsize=256)
-    def calculate_ability_cost(self, ability) -> Cost:
+    def calculate_ability_cost(self, ability: Union[AbilityData, AbilityId, UnitCommand]) -> Cost:
         if isinstance(ability, AbilityId):
             ability = self.abilities[ability.value]
         elif isinstance(ability, UnitCommand):
             ability = self.abilities[ability.ability.value]
 
-        assert isinstance(ability, AbilityData), f"C: {ability}"
+        assert isinstance(ability, AbilityData), f"Ability is not of type 'AbilityData', but was {type(ability)}"
 
         for unit in self.units.values():
             if unit.creation_ability is None:
@@ -53,6 +58,9 @@ class GameData:
                 if unit.id == UnitTypeId.ZERGLING:
                     # HARD CODED: zerglings are generated in pairs
                     return Cost(unit.cost.minerals * 2, unit.cost.vespene * 2, unit.cost.time)
+                if unit.id == UnitTypeId.BANELING:
+                    # HARD CODED: banelings don't cost 50/25 as described in the API, but 25/25
+                    return Cost(25, 25, unit.cost.time)
                 # Correction for morphing units, e.g. orbital would return 550/0 instead of actual 150/0
                 morph_cost = unit.morph_cost
                 if morph_cost:  # can be None
@@ -118,9 +126,7 @@ class AbilityData:
 
     @property
     def is_free_morph(self) -> bool:
-        if any(free in self._proto.link_name for free in FREE_ABILITIES):
-            return True
-        return False
+        return any(free in self._proto.link_name for free in FREE_ABILITIES)
 
     @property
     def cost(self) -> Cost:
@@ -301,21 +307,15 @@ class UpgradeData:
         return Cost(self._proto.mineral_cost, self._proto.vespene_cost, self._proto.research_time)
 
 
+@dataclass
 class Cost:
     """
     The cost of an action, a structure, a unit or a research upgrade.
     The time is given in frames (22.4 frames per game second).
     """
-
-    def __init__(self, minerals: int, vespene: int, time: float = None):
-        """
-        :param minerals:
-        :param vespene:
-        :param time:
-        """
-        self.minerals = minerals
-        self.vespene = vespene
-        self.time = time
+    minerals: int
+    vespene: int
+    time: Optional[float] = None
 
     def __repr__(self) -> str:
         return f"Cost({self.minerals}, {self.vespene})"
@@ -334,26 +334,15 @@ class Cost:
             return self
         if not self:
             return other
-        if self.time is None:
-            time = other.time
-        elif other.time is None:
-            time = self.time
-        else:
-            time = self.time + other.time
-        return self.__class__(self.minerals + other.minerals, self.vespene + other.vespene, time=time)
+        time = (self.time or 0) + (other.time or 0)
+        return Cost(self.minerals + other.minerals, self.vespene + other.vespene, time=time)
 
-    def __sub__(self, other) -> Cost:
-        assert isinstance(other, Cost)
-        if self.time is None:
-            time = other.time
-        elif other.time is None:
-            time = self.time
-        else:
-            time = self.time - other.time
-        return self.__class__(self.minerals - other.minerals, self.vespene - other.vespene, time=time)
+    def __sub__(self, other: Cost) -> Cost:
+        time = (self.time or 0) + (other.time or 0)
+        return Cost(self.minerals - other.minerals, self.vespene - other.vespene, time=time)
 
     def __mul__(self, other: int) -> Cost:
-        return self.__class__(self.minerals * other, self.vespene * other, time=self.time)
+        return Cost(self.minerals * other, self.vespene * other, time=self.time)
 
     def __rmul__(self, other: int) -> Cost:
-        return self.__class__(self.minerals * other, self.vespene * other, time=self.time)
+        return Cost(self.minerals * other, self.vespene * other, time=self.time)

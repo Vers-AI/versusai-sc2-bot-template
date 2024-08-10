@@ -175,7 +175,7 @@ IS_PLACEHOLDER = DisplayType.Placeholder.value
 IS_MINE = Alliance.Self.value
 IS_ENEMY = Alliance.Enemy.value
 IS_CLOAKED: Set[int] = {CloakState.Cloaked.value, CloakState.CloakedDetected.value, CloakState.CloakedAllied.value}
-IS_REVEALED: Set[int] = CloakState.CloakedDetected.value
+IS_REVEALED: int = CloakState.CloakedDetected.value
 CAN_BE_ATTACKED: Set[int] = {CloakState.NotCloaked.value, CloakState.CloakedDetected.value}
 IS_CARRYING_MINERALS: Set[BuffId] = {BuffId.CARRYMINERALFIELDMINERALS, BuffId.CARRYHIGHYIELDMINERALFIELDMINERALS}
 IS_CARRYING_VESPENE: Set[BuffId] = {
@@ -254,8 +254,8 @@ SPEED_INCREASE_DICT: Dict[UnitTypeId, float] = {
     UnitTypeId.ROACH: 1.3333333333,
     UnitTypeId.LURKERMP: 1.1,
 }
-temp1 = set(SPEED_UPGRADE_DICT.keys())
-temp2 = set(SPEED_INCREASE_DICT.keys())
+temp1 = set(SPEED_UPGRADE_DICT)
+temp2 = set(SPEED_INCREASE_DICT)
 assert temp1 == temp2, f"{temp1.symmetric_difference(temp2)}"
 del temp1
 del temp2
@@ -283,8 +283,8 @@ OFF_CREEP_SPEED_INCREASE_DICT: Dict[UnitTypeId, float] = {
     UnitTypeId.HYDRALISK: 1.25,
     UnitTypeId.ULTRALISK: 1.2,
 }
-temp1 = set(OFF_CREEP_SPEED_UPGRADE_DICT.keys())
-temp2 = set(OFF_CREEP_SPEED_INCREASE_DICT.keys())
+temp1 = set(OFF_CREEP_SPEED_UPGRADE_DICT)
+temp2 = set(OFF_CREEP_SPEED_INCREASE_DICT)
 assert temp1 == temp2, f"{temp1.symmetric_difference(temp2)}"
 del temp1
 del temp2
@@ -311,17 +311,12 @@ COMBINEABLE_ABILITIES: Set[AbilityId] = {
     AbilityId.MOVE,
     AbilityId.ATTACK,
     AbilityId.SCAN_MOVE,
-    AbilityId.SMART,
     AbilityId.STOP,
     AbilityId.HOLDPOSITION,
     AbilityId.PATROL,
     AbilityId.HARVEST_GATHER,
     AbilityId.HARVEST_RETURN,
     AbilityId.EFFECT_REPAIR,
-    AbilityId.RALLY_BUILDING,
-    AbilityId.RALLY_UNITS,
-    AbilityId.RALLY_WORKERS,
-    AbilityId.RALLY_MORPHING_UNIT,
     AbilityId.LIFT,
     AbilityId.BURROWDOWN,
     AbilityId.BURROWUP,
@@ -685,4 +680,17 @@ TARGET_HELPER = {
     3: "Unit",
     4: "Point2 or Unit",
     5: "Point2 or no target",
+}
+CREATION_ABILITY_FIX: Dict[UnitTypeId, AbilityId] = {
+    UnitTypeId.ARCHON: AbilityId.ARCHON_WARP_TARGET,
+    UnitTypeId.ASSIMILATORRICH: AbilityId.PROTOSSBUILD_ASSIMILATOR,
+    UnitTypeId.BANELINGCOCOON: AbilityId.MORPHZERGLINGTOBANELING_BANELING,
+    UnitTypeId.CHANGELING: AbilityId.SPAWNCHANGELING_SPAWNCHANGELING,
+    UnitTypeId.EXTRACTORRICH: AbilityId.ZERGBUILD_EXTRACTOR,
+    UnitTypeId.INTERCEPTOR: AbilityId.BUILD_INTERCEPTORS,
+    UnitTypeId.LURKERMPEGG: AbilityId.MORPH_LURKER,
+    UnitTypeId.MULE: AbilityId.CALLDOWNMULE_CALLDOWNMULE,
+    UnitTypeId.RAVAGERCOCOON: AbilityId.MORPHTORAVAGER_RAVAGER,
+    UnitTypeId.REFINERYRICH: AbilityId.TERRANBUILD_REFINERY,
+    UnitTypeId.TECHLAB: AbilityId.BUILD_TECHLAB,
 }

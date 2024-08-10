@@ -13,6 +13,7 @@ from loguru import logger
 from sc2.bot_ai_internal import BotAIInternal
 from sc2.cache import property_cache_once_per_frame
 from sc2.constants import (
+    CREATION_ABILITY_FIX,
     EQUIVALENTS_FOR_TECH_PROGRESS,
     PROTOSS_TECH_REQUIREMENT,
     TERRAN_STRUCTURES_REQUIRE_SCV,
@@ -212,9 +213,7 @@ class BotAI(BotAIInternal):
         :param ignore_resource_requirements:"""
         return await self.client.query_available_abilities(units, ignore_resource_requirements)
 
-    async def expand_now(
-        self, building: UnitTypeId = None, max_distance: float = 10, location: Optional[Point2] = None
-    ):
+    async def expand_now(self, building: UnitTypeId = None, max_distance: int = 10, location: Optional[Point2] = None):
         """Finds the next possible expansion via 'self.get_next_expansion()'. If the target expansion is blocked (e.g. an enemy unit), it will misplace the expansion.
 
         :param building:
@@ -401,6 +400,8 @@ class BotAI(BotAIInternal):
         :param unit_type:"""
         if unit_type in {UnitTypeId.ZERGLING}:
             return 1
+        if unit_type in {UnitTypeId.BANELING}:
+            return 0
         unit_supply_cost = self.game_data.units[unit_type.value]._proto.food_required
         if unit_supply_cost > 0 and unit_type in UNIT_TRAINED_FROM and len(UNIT_TRAINED_FROM[unit_type]) == 1:
             producer: UnitTypeId
@@ -473,16 +474,18 @@ class BotAI(BotAIInternal):
         """
         if isinstance(item_id, UnitTypeId):
             # Fix cost for reactor and techlab where the API returns 0 for both
-            if item_id in {UnitTypeId.REACTOR, UnitTypeId.TECHLAB, UnitTypeId.ARCHON}:
+            if item_id in {UnitTypeId.REACTOR, UnitTypeId.TECHLAB, UnitTypeId.ARCHON, UnitTypeId.BANELING}:
                 if item_id == UnitTypeId.REACTOR:
                     return Cost(50, 50)
                 if item_id == UnitTypeId.TECHLAB:
                     return Cost(50, 25)
+                if item_id == UnitTypeId.BANELING:
+                    return Cost(25, 25)
                 if item_id == UnitTypeId.ARCHON:
                     return self.calculate_unit_value(UnitTypeId.ARCHON)
             unit_data = self.game_data.units[item_id.value]
             # Cost of morphs is automatically correctly calculated by 'calculate_ability_cost'
-            return self.game_data.calculate_ability_cost(unit_data.creation_ability)
+            return self.game_data.calculate_ability_cost(unit_data.creation_ability.exact_id)
 
         if isinstance(item_id, UpgradeId):
             cost = self.game_data.upgrades[item_id.value].cost
@@ -553,7 +556,7 @@ class BotAI(BotAIInternal):
             if only_check_energy_and_cooldown:
                 return True
             cast_range = self.game_data.abilities[ability_id.value]._proto.cast_range
-            ability_target = self.game_data.abilities[ability_id.value]._proto.target
+            ability_target: int = self.game_data.abilities[ability_id.value]._proto.target
             # Check if target is in range (or is a self cast like stimpack)
             if (
                 ability_target == 1 or ability_target == Target.PointOrNone.value and isinstance(target, Point2)
@@ -782,11 +785,14 @@ class BotAI(BotAIInternal):
         }
         # SUPPLYDEPOTDROP is not in self.game_data.units, so bot_ai should not check the build progress via creation ability (worker abilities)
         if structure_type_value not in self.game_data.units:
-            return max([s.build_progress for s in self.structures if s._proto.unit_type in equiv_values], default=0)
-        creation_ability: AbilityData = self.game_data.units[structure_type_value].creation_ability
+            return max((s.build_progress for s in self.structures if s._proto.unit_type in equiv_values), default=0)
+        creation_ability_data: AbilityData = self.game_data.units[structure_type_value].creation_ability
+        if creation_ability_data is None:
+            return 0
+        creation_ability: AbilityId = creation_ability_data.exact_id
         max_value = max(
             [s.build_progress for s in self.structures if s._proto.unit_type in equiv_values] +
-            [self._abilities_all_units[1].get(creation_ability, 0)],
+            [self._abilities_count_and_build_progress[1].get(creation_ability, 0)],
             default=0,
         )
         return max_value
@@ -841,19 +847,28 @@ class BotAI(BotAIInternal):
             amount_of_CCs_in_queue_and_production: int = self.already_pending(UnitTypeId.COMMANDCENTER)
             amount_of_lairs_morphing: int = self.already_pending(UnitTypeId.LAIR)
 
-
         :param unit_type:
         """
         if isinstance(unit_type, UpgradeId):
             return self.already_pending_upgrade(unit_type)
-        ability = self.game_data.units[unit_type.value].creation_ability
-        return self._abilities_all_units[0][ability]
+        try:
+            ability = self.game_data.units[unit_type.value].creation_ability.exact_id
+        except AttributeError:
+            if unit_type in CREATION_ABILITY_FIX:
+                # Hotfix for checking pending archons
+                if unit_type == UnitTypeId.ARCHON:
+                    return self._abilities_count_and_build_progress[0][AbilityId.ARCHON_WARP_TARGET] / 2
+                # Hotfix for rich geysirs
+                return self._abilities_count_and_build_progress[0][CREATION_ABILITY_FIX[unit_type]]
+            logger.error(f"Uncaught UnitTypeId: {unit_type}")
+            return 0
+        return self._abilities_count_and_build_progress[0][ability]
 
     def worker_en_route_to_build(self, unit_type: UnitTypeId) -> float:
         """This function counts how many workers are on the way to start the construction a building.
 
         :param unit_type:"""
-        ability = self.game_data.units[unit_type.value].creation_ability
+        ability = self.game_data.units[unit_type.value].creation_ability.exact_id
         return self._worker_orders[ability]
 
     @property_cache_once_per_frame
@@ -867,11 +882,7 @@ class BotAI(BotAIInternal):
                 continue
             for order in worker.orders:
                 # When a construction is resumed, the worker.orders[0].target is the tag of the structure, else it is a Point2
-                target = order.target
-                if isinstance(target, int):
-                    worker_targets.add(target)
-                else:
-                    worker_targets.add(Point2.from_proto(target))
+                worker_targets.add(order.target)
         return self.structures.filter(
             lambda structure: structure.build_progress < 1
             # Redundant check?
@@ -891,7 +902,7 @@ class BotAI(BotAIInternal):
     ) -> bool:
         """Not recommended as this function checks many positions if it "can place" on them until it found a valid
         position. Also if the given position is not placeable, this function tries to find a nearby position to place
-        the structure. Then uses 'self.do' to give the worker the order to start the construction.
+        the structure. Then orders the worker to start the construction.
 
         :param building:
         :param near:
@@ -933,7 +944,7 @@ class BotAI(BotAIInternal):
         """Trains a specified number of units. Trains only one if amount is not specified.
         Warning: currently has issues with warp gate warp ins
 
-        New function. Please report any bugs!
+        Very generic function. Please use with caution and report any bugs!
 
         Example Zerg::
 
@@ -1155,6 +1166,7 @@ class BotAI(BotAIInternal):
 
     def in_map_bounds(self, pos: Union[Point2, tuple, list]) -> bool:
         """Tests if a 2 dimensional point is within the map boundaries of the pixelmaps.
+
         :param pos:"""
         return (
             self.game_info.playable_area.x <= pos[0] <
@@ -1282,6 +1294,7 @@ class BotAI(BotAIInternal):
             print(f"My unit took damage: {unit} took {amount_damage_taken} damage")
 
         :param unit:
+        :param amount_damage_taken:
         """
 
     async def on_enemy_unit_entered_vision(self, unit: Unit):
