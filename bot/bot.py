@@ -1,18 +1,11 @@
-from sc2.bot_ai import BotAI, Race
+from sc2.bot_ai import BotAI
 from sc2.data import Result
 
 class CompetitiveBot(BotAI):
-    NAME: str = "CompetitiveBot"
-    """This bot's name"""
-
-    RACE: Race = Race.Terran
-    """This bot's Starcraft 2 race.
-    Options are:
-        Race.Terran
-        Race.Zerg
-        Race.Protoss
-        Race.Random
-    """
+    """Main bot class that handles the game logic."""
+    
+    def __init__(self):
+        super().__init__()
 
     async def on_start(self):
         """

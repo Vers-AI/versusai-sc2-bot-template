@@ -1,88 +1,102 @@
 # versusai-sc2-bot-template
 
-Use this template to start a new Starcraft 2 bot using the [python-sc2](https://github.com/BurnySc2/python-sc2) framework.  
-Then, if you need, follow the tutorial below.  
+A template for creating Starcraft 2 AI bots using the [python-sc2](https://github.com/BurnySc2/python-sc2) framework. This template includes a basic bot setup with a clean configuration system.
 
-# Tutorial: Starting a python-sc2 bot
+🚀 **New to StarCraft 2 AI?** Check out our [visual tutorial](https://versusai.net/labs/simple-starcraft-2-bot-template-to-get-started-in-python/) for a step-by-step guide on getting started!
 
-## Preparing your environment
+## Features
 
-First you will need to prepare your environment.
+- Simple configuration via `config.py`
+- Easy setup for local development
+- Support for custom maps and AI opponents
+- Ready-to-use bot structure
 
-### Prerequisites
+# Quick Start
 
-##### Python
+## Prerequisites
 
-This tutorial recommends you use Python version 3.8.X.
-However, newer Python versions should also work with this tutorial.
-[Python downloads page](https://www.python.org/downloads/)
+- [Python](https://www.python.org/downloads/) 3.8 or newer
+- [Git](https://git-scm.com/downloads)
+- [StarCraft II](https://battle.net/account/download/)
 
-##### Git
+### StarCraft II Installation
 
-This tutorial will use git for version control.  
-[Git downloads page](https://git-scm.com/downloads)
+- **Windows**: Install through the Battle.net app
+- **Linux**: 
+  - Option 1: Use the [Blizzard SC2 Linux package](https://github.com/Blizzard/s2client-proto#linux-packages)
+  - Option 2: Set up Battle.net via WINE using [Lutris](https://lutris.net/games/battlenet/)
 
-##### Starcraft 2
+### Required Maps
 
-On Windows SC2 is installed through the Battle.net app.  
-Linux users can either download the Blizzard SC2 Linux package [here](https://github.com/Blizzard/s2client-proto#linux-packages) or, alternatively, set up Battle.net via WINE using this [lutris script](https://lutris.net/games/battlenet/).
+Download the StarCraft 2 Maps from [here](https://github.com/Blizzard/s2client-proto#map-packs). You'll at least need the 'Melee' pack.
 
-SC2 should be installed in the default location. Otherwise (and for Linux) you might need to create the SC2PATH environment variable to point to the SC2 install location.
+By default, the bot will look for maps in the standard installation location. If your maps are in a different location, update the `MAP_PATH` in `config.py`.
 
-## Environment Setup for Linux (Lutris)
+## Linux (Lutris) Setup
 
-If you've installed StarCraft II using Lutris on Linux, you'll need to set some environment variables so that the `python-sc2` library can correctly interact with the game.
-
-### Setting Environment Variables Temporarily
-
-Open a terminal and enter the following commands, replacing `(username)` with your actual Linux username and `(version of wine)` with the version of Wine that Lutris is using:
+If you're using Lutris on Linux, set these environment variables (replace placeholders with your actual paths):
 
 ```bash
 export SC2PF=WineLinux
-export SC2PATH="/home/`(username)`/Games/battlenet/drive_c/Program Files (x86)/StarCraft II/"
-export WINE="/home/`(username)`/.local/share/lutris/runners/wine/`(version of wine)`/bin/wine" 
+export SC2PATH="/home/YOUR_USERNAME/Games/battlenet/drive_c/Program Files (x86)/StarCraft II/"
+export WINE="/home/YOUR_USERNAME/.local/share/lutris/runners/wine/YOUR_WINE_VERSION/bin/wine"
 ```
 
-##### Starcraft 2 Maps
+## Configuration
 
-Download the Starcraft 2 Maps from [here](https://github.com/Blizzard/s2client-proto#map-packs).   For this tutorial you will at least need the 'Melee' pack.  
-The maps must be copied into the **root** of the Starcraft 2 maps folder - default location: `C:\Program Files (x86)\StarCraft II\Maps`.
+Edit `config.py` to customize your bot's behavior. The configuration file includes options for:
 
-## Creating your bot
-### Setup
-Click the green `Use this template` button above to create your own copy of this bot.  
-Now clone your new repository to your local computer using git:
-```bash
-git clone <your_git_clone_repo_url_here>
-```
-cd into your bot directory:
-```bash
-cd <bot_folder_name_here>
-```
-Create and activate a virtual environment:
-```bash
-python -m venv venv
-# and then...
-venv\Scripts\activate # Windows CMD Prompt / PowerShell
-source venv/bin/activate # Mac OS / Linux
-```
-Install our bot's Python requirements:
-```bash
-pip install -r requirements.txt
-```
-Test our bot is working by running it:
-```bash
-python ./run.py
-```
-If all is well, you should see SC2 load and your bot start mining minerals.  
-You can close the SC2 window to stop your bot running. 
+- **Bot Settings**: Name and race (Terran/Protoss/Zerg/Random)
+- **Game Settings**: Map paths and map pool selection
+- **Opponent Settings**: AI difficulty and race selection
+- **Game Mode**: Toggle between realtime and faster simulation
 
-## Updating your bot
+For advanced configuration, refer to the comments in `config.py`.
 
-### Bot name and race
+## Getting Started
 
-Now you will want to name your bot and select its race.
-You can specify both of these in the [bot/bot.py](bot/bot.py) file, in the `CompetitiveBot` class.
+1. **Create your repository**
+   - Click the `Use this template` button above to create your own copy
+
+2. **Clone your repository**
+   ```bash
+   git clone <your-repository-url>
+   cd <repository-name>
+   ```
+
+3. **Set up a virtual environment**
+   ```bash
+   # Windows
+   python -m venv venv
+   .\venv\Scripts\activate
+   
+   # Linux/Mac
+   python3 -m venv venv
+   source venv/bin/activate
+   ```
+
+4. **Install dependencies**
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+5. **Run the bot**
+   ```bash
+   python run.py
+   ```
+   The bot should start and begin playing against the AI opponent.
+
+## Customizing Your Bot
+
+### Basic Configuration
+Edit `config.py` to change:
+- Bot name and race
+- Game settings and map pool
+- Opponent difficulty and race
+- Game mode (realtime or faster simulation)
+
+### Adding Logic
+Modify `bot/bot.py` to implement your bot's behavior. The `on_step` method is where you'll add most of your bot's logic.
 
 ### Adding new code
 
