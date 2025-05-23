@@ -15,11 +15,9 @@ MAP_PATH = "C:/Program Files (x86)/StarCraft II/Maps"  # Default Windows path - 
 
 # List of maps to play on (randomly selected if not specified)
 MAP_POOL = [
-    "Simple64",
-    "2000AtmospheresAIE",
-    "BlackburnAIE",
-    "HardwireAIE",
-    "BerlingradAIE"
+    "Simple128",
+    "Simple96",
+    "Simple64"
 ]
 
 # ===== OPPONENT SETTINGS =====
