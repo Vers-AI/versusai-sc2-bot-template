@@ -2,7 +2,9 @@
 
 A template for creating Starcraft 2 AI bots using the [python-sc2](https://github.com/BurnySc2/python-sc2) framework. This template includes a basic bot setup with a clean configuration system.
 
-🚀 **New to StarCraft 2 AI?** Check out our [visual tutorial](https://versusai.net/labs/simple-starcraft-2-bot-template-to-get-started-in-python/) for a step-by-step guide on getting started!
+🚀 **New to StarCraft 2 AI?** 
+
+Check out our [Zerg Rush Bot Step](https://subscribe.versusai.net/zerg-rush) for a quick boost on getting started!
 
 ## Features
 
@@ -10,6 +12,7 @@ A template for creating Starcraft 2 AI bots using the [python-sc2](https://githu
 - Easy setup for local development
 - Support for custom maps and AI opponents
 - Ready-to-use bot structure
+- Upgradable to ARES framework
 
 # Quick Start
 
@@ -28,7 +31,7 @@ A template for creating Starcraft 2 AI bots using the [python-sc2](https://githu
 
 ### Required Maps
 
-Download the StarCraft 2 Maps from [here](https://github.com/Blizzard/s2client-proto#map-packs). You'll at least need the 'Melee' pack.
+Download the Melee StarCraft 2 Maps from [here](https://blzdistsc2-a.akamaihd.net/MapPacks/Melee.zip). Unzip the file and place the maps in the `Maps` folder in your StarCraft 2 installation directory. If one doesn't exist, create it.
 
 By default, the bot will look for maps in the standard installation location. If your maps are in a different location, update the `MAP_PATH` in `config.py`.
 
@@ -196,7 +199,9 @@ class MyBot(AresBot):
         # custom on_unit_took_damage logic here ...
 ```
 
-## Competing with your bot
+# Competing with your bot
+
+Place your bot on the AI Arena ladder at [here](https://aiarena.net/).
 
 To compete with your bot, you will first need zip up your bot, ready for distribution.   
 You can do this using the `create_ladder_zip.py` script like so:
