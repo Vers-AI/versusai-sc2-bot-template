@@ -105,20 +105,19 @@ Modify `bot/bot.py` to implement your bot's behavior. The `on_step` method is wh
 
 As you add features to your bot make sure all your new code files are in the `bot` folder. This folder is included when creating the ladder.zip for upload to the bot ladders.
 
-## Upgrading to Ares Framework
+# Upgrading to Ares Framework
 
 Ares-sc2 is a library that extends python-sc2, offering advanced tools and functionalities to give you greater control over your bot's strategic decisions. If you want more sophisticated and nuanced gameplay tactics, upgrading to Ares-sc2 is the way to go.
 
-### Running the Upgrade Script
+## Running the Upgrade Script
 
 Run the following command:
 ```bash
 python upgrade_to_ares.py
 ```
 
-### Code Changes
+## Code Changes
 
-#### Updating the Bot Object
 
 The main bot object should inherit from `ares-sc2` instead of `python-sc2`.
 
@@ -138,7 +137,7 @@ class MyBot(AresBot):
     pass
 ```
 
-#### Adding Super Calls to Hook Methods
+## Adding Super Calls to Hook Methods
 
 For any `python-sc2` hook methods you use, add a `super` call. Only convert the hooks you actually use.
 
