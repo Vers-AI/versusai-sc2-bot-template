@@ -31,7 +31,7 @@ Check out our [Zerg Rush Bot Step](https://subscribe.versusai.net/zerg-rush) for
 
 ### Required Maps
 
-Download the Melee StarCraft 2 Maps from [here](https://blzdistsc2-a.akamaihd.net/MapPacks/Melee.zip). Unzip the file and place the maps in the `Maps` folder in your StarCraft 2 installation directory. If one doesn't exist, create it.
+Download the StarCraft 2 AI Maps from [here](https://www.dropbox.com/scl/fi/sha2hnrce4wihhu62l1ty/Maps.zip?rlkey=b74sn8ee54vi1wn24sw9m9bd8&dl=1). Unzip the file and place the maps in the `Maps` folder in your StarCraft 2 installation directory. If one doesn't exist, create it.
 
 By default, the bot will look for maps in the standard installation location. If your maps are in a different location, update the `MAP_PATH` in `config.py`.
 
